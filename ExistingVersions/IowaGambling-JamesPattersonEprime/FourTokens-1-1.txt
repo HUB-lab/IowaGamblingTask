@@ -1,0 +1,589 @@
+*** Header Start ***
+VersionPersist: 1
+LevelName: Session
+LevelName: Block
+LevelName: Trial
+LevelName: SubTrial
+LevelName: LogLevel5
+LevelName: LogLevel6
+LevelName: LogLevel7
+LevelName: LogLevel8
+LevelName: LogLevel9
+LevelName: LogLevel10
+Experiment: FourTokens
+SessionDate: 09-05-2002
+SessionTime: 16:04:06
+RandomSeed: 1251360602
+Group: 1
+Subject: 1
+Session: 1
+Name: 0
+Age: 0
+Sex: male
+Handedness: left
+Display.RefreshRate: 60.015
+*** Header End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 1
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 1
+		Tokens.RTTime: 74987
+		Tokens.RT: 6069
+		Tokens.RESP: r
+		totalsum: 150
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 2
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 2
+		Tokens.RTTime: 80378
+		Tokens.RT: 4345
+		Tokens.RESP: r
+		totalsum: 300
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 3
+		Circle: 150
+		Crystal: -310
+		Square: -125
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 3
+		Tokens.RTTime: 84448
+		Tokens.RT: 3016
+		Tokens.RESP: r
+		totalsum: 450
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 4
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 4
+		Tokens.RTTime: 87515
+		Tokens.RT: 2018
+		Tokens.RESP: r
+		totalsum: 600
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 5
+		Circle: 150
+		Crystal: 200
+		Square: -145
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 5
+		Tokens.RTTime: 89435
+		Tokens.RT: 872
+		Tokens.RESP: r
+		totalsum: 750
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 6
+		Circle: 150
+		Crystal: -2150
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 6
+		Tokens.RTTime: 91570
+		Tokens.RT: 1091
+		Tokens.RESP: r
+		totalsum: 900
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 7
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 7
+		Tokens.RTTime: 93741
+		Tokens.RT: 1129
+		Tokens.RESP: r
+		totalsum: 1050
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 8
+		Circle: 150
+		Crystal: 200
+		Square: -125
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 8
+		Tokens.RTTime: 95717
+		Tokens.RT: 922
+		Tokens.RESP: r
+		totalsum: 1200
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 9
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 9
+		Tokens.RTTime: 98098
+		Tokens.RT: 1337
+		Tokens.RESP: r
+		totalsum: 1350
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 10
+		Circle: -1000
+		Crystal: 200
+		Square: -145
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 10
+		Tokens.RTTime: 100192
+		Tokens.RT: 1048
+		Tokens.RESP: r
+		totalsum: 350
+		var: -1000
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 11
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 11
+		Tokens.RTTime: 108153
+		Tokens.RT: 6910
+		Tokens.RESP: c
+		totalsum: 500
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 12
+		Circle: 150
+		Crystal: -2150
+		Square: 150
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 12
+		Tokens.RTTime: 111210
+		Tokens.RT: 2002
+		Tokens.RESP: c
+		totalsum: 650
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 13
+		Circle: 150
+		Crystal: 200
+		Square: -125
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 13
+		Tokens.RTTime: 113483
+		Tokens.RT: 1226
+		Tokens.RESP: c
+		totalsum: 525
+		var: -125
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 14
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 14
+		Tokens.RTTime: 117338
+		Tokens.RT: 2815
+		Tokens.RESP: m
+		totalsum: 215
+		var: -310
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 15
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 15
+		Tokens.RTTime: 121127
+		Tokens.RT: 2738
+		Tokens.RESP: i
+		totalsum: 415
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 16
+		Circle: 150
+		Crystal: 200
+		Square: -145
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 16
+		Tokens.RTTime: 124122
+		Tokens.RT: 1951
+		Tokens.RESP: i
+		totalsum: 615
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 17
+		Circle: 150
+		Crystal: -2150
+		Square: 150
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 17
+		Tokens.RTTime: 127388
+		Tokens.RT: 2217
+		Tokens.RESP: i
+		totalsum: -1535
+		var: -2150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 18
+		Circle: 150
+		Crystal: 200
+		Square: -125
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 18
+		Tokens.RTTime: 130916
+		Tokens.RT: 2479
+		Tokens.RESP: m
+		totalsum: -1845
+		var: -310
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 19
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 19
+		Tokens.RTTime: 135155
+		Tokens.RT: 3186
+		Tokens.RESP: r
+		totalsum: -1695
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 20
+		Circle: -950
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 20
+		Tokens.RTTime: 137608
+		Tokens.RT: 1407
+		Tokens.RESP: r
+		totalsum: -2645
+		var: -950
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 21
+		Circle: 150
+		Crystal: 200
+		Square: -145
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 21
+		Tokens.RTTime: 142210
+		Tokens.RT: 3559
+		Tokens.RESP: c
+		totalsum: -2790
+		var: -145
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 22
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 22
+		Tokens.RTTime: 144340
+		Tokens.RT: 1074
+		Tokens.RESP: r
+		totalsum: -2640
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 23
+		Circle: 150
+		Crystal: 200
+		Square: -125
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 23
+		Tokens.RTTime: 147028
+		Tokens.RT: 1646
+		Tokens.RESP: c
+		totalsum: -2765
+		var: -125
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 24
+		Circle: 150
+		Crystal: -2150
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 24
+		Tokens.RTTime: 150418
+		Tokens.RT: 2336
+		Tokens.RESP: r
+		totalsum: -2615
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 25
+		Circle: 150
+		Crystal: 200
+		Square: -145
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 25
+		Tokens.RTTime: 156300
+		Tokens.RT: 4836
+		Tokens.RESP: r
+		totalsum: -2465
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 26
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 26
+		Tokens.RTTime: 163913
+		Tokens.RT: 6567
+		Tokens.RESP: r
+		totalsum: -2315
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 27
+		Circle: 150
+		Crystal: -310
+		Square: 150
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 27
+		Tokens.RTTime: 168107
+		Tokens.RT: 3146
+		Tokens.RESP: r
+		totalsum: -2165
+		var: 150
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 28
+		Circle: 150
+		Crystal: 200
+		Square: -125
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 28
+		Tokens.RTTime: 320811
+		Tokens.RT: 151651
+		Tokens.RESP: m
+		totalsum: -1965
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 29
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 29
+		Tokens.RTTime: 321917
+		Tokens.RT: 62
+		Tokens.RESP: m
+		totalsum: -2275
+		var: -310
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 30
+		Circle: -1000
+		Crystal: -2150
+		Square: -145
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 30
+		Tokens.RTTime: 323028
+		Tokens.RT: 57
+		Tokens.RESP: m
+		totalsum: -2075
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 31
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 31
+		Tokens.RTTime: 324175
+		Tokens.RT: 104
+		Tokens.RESP: m
+		totalsum: -1875
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 32
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 32
+		*** LogFrame End ***
+	Level: 2
+	*** LogFrame Start ***
+	BlockList: 1
+	BlockVar1: ?
+	PracticeMode: ?
+	Procedure: BlockProc
+	BlockList.Cycle: 1
+	BlockList.Sample: 1
+	Running: BlockList
+	*** LogFrame End ***
+Level: 1
+*** LogFrame Start ***
+Experiment: FourTokens
+SessionDate: 09-05-2002
+SessionTime: 16:04:06
+RandomSeed: 1251360602
+Group: 1
+Subject: 1
+Session: 1
+Name: 0
+Age: 0
+Sex: male
+Handedness: left
+Display.RefreshRate: 60.015
+*** LogFrame End ***

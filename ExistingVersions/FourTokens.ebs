@@ -1,0 +1,949 @@
+'	C:\My Experiments\FourTokens.ebs
+'	Generated on: 5/21/2002	15:19:35
+'	Author: James C. Patterson II, MD/PhD (LSUHSCS)
+
+Option CStrings On
+Dim ebContext as Context
+Dim Display As DisplayDevice
+Dim Sound As SoundDevice
+Dim Keyboard As KeyboardDevice
+Dim Mouse As MouseDevice
+Dim SessionProc As Procedure
+Dim BlockList As List
+Dim TrialList As List
+Dim TrialProc As Procedure
+Dim BlockProc As Procedure
+Dim Instructions As TextDisplay
+Dim InstructionsEchoClients As EchoClientCollection
+Dim Tokens As ImageDisplay
+Dim TokensEchoClients As EchoClientCollection
+Dim Inst02 As TextDisplay
+Dim Inst02EchoClients As EchoClientCollection
+Dim Feedback As FeedbackDisplay
+Dim Feedback_State As SlideState
+Dim Feedback_SlideText As SlideText
+Dim totalsum As integer
+Dim var As integer
+
+'--------------------------------------------------------------------------
+Sub SessionProc_Run(c as Context)
+	
+	Instructions.InputMasks.Reset
+	InstructionsEchoClients.RemoveAll
+	Instructions.InputMasks.Add Keyboard.CreateInputMask("{SPACE}", "", CLng(Instructions.Duration), CLng("1"), ebEndResponseActionTerminate, CLogical("Yes"), "", "", "ResponseMode:All ProcessBackspace:Yes")
+	Instructions.Run
+	Inst02.InputMasks.Reset
+	Inst02EchoClients.RemoveAll
+	Inst02.InputMasks.Add Keyboard.CreateInputMask("{SPACE}", "", CLng(Inst02.Duration), CLng("1"), ebEndResponseActionTerminate, CLogical("Yes"), "", "", "ResponseMode:All ProcessBackspace:Yes")
+	Inst02.Run
+	BlockList.Run c
+	c.Log
+End Sub
+
+Sub TrialProc_Run(c as Context)
+	Tokens.InputMasks.Reset
+	TokensEchoClients.RemoveAll
+	Tokens.InputMasks.Add Keyboard.CreateInputMask("ricm", "ricm", CLng(Tokens.Duration), CLng("1"), ebEndResponseActionTerminate, CLogical("Yes"), "", "", "ResponseMode:All ProcessBackspace:Yes")
+	Tokens.Run
+
+if Tokens.RESP = "r" then
+	var = c.getAttrib ("circle")
+	totalsum = var+totalsum
+end if
+if Tokens.RESP = "i" then
+	var = c.getAttrib ("crystal")
+	totalsum = var+totalsum
+end if
+if Tokens.RESP = "c" then
+	var = c.getAttrib ("square")
+	totalsum = var+totalsum
+end if
+if Tokens.RESP = "m" then
+	var = c.getAttrib ("diamond")
+	totalsum = var+totalsum
+end if
+
+	c.SetAttrib "Tokens.RTTime", Tokens.RTTime
+	c.SetAttrib "Tokens.RT", Tokens.RT
+	c.SetAttrib "Tokens.RESP", Tokens.RESP
+	c.SetAttrib "totalsum", totalsum
+	c.SetAttrib "var", var
+
+	Select Case Feedback.ActiveState
+		Case "Correct"
+			Set Feedback_SlideText = CSlideText(Feedback.States.Item("Correct").Objects(1))
+			Feedback_SlideText.Text = c.GetAttrib("totalsum")
+			Set Feedback_SlideText = Nothing
+
+			Set Feedback_SlideText = CSlideText(Feedback.States.Item("Correct").Objects(2))
+			Feedback_SlideText.Text = c.GetAttrib("var")
+			Set Feedback_SlideText = Nothing
+		Case "Incorrect"
+		Case "NoResponse"
+		Case "Pending"
+	End Select
+
+	Feedback.Run
+
+	c.Log
+End Sub
+
+Sub BlockProc_Run(c as Context)
+	TrialList.Run c
+	c.Log
+End Sub
+
+'--------------------------------------------------------------------------
+' InitDevices
+'--------------------------------------------------------------------------
+
+Sub InitDevices(c As Context)
+
+
+
+	SetOSThreadPriority 3
+
+
+	Set Display = New DisplayDevice
+	Display.Name = "Display"
+
+	Dim DisplayDisplayDeviceInfo As DisplayDeviceInfo
+	DisplayDisplayDeviceInfo.XRes = 640
+	DisplayDisplayDeviceInfo.YRes = 480
+	DisplayDisplayDeviceInfo.ColorDepth = 16
+	DisplayDisplayDeviceInfo.RefreshRate = 0
+	DisplayDisplayDeviceInfo.NumPages = 0
+
+	Display.Open DisplayDisplayDeviceInfo
+	c.SetAttrib "Display.RefreshRate", Format$(Display.CalculatedRefreshRate, "0.000")
+
+	Set Sound = New SoundDevice
+	Sound.Name = "Sound"
+
+	Dim SoundSoundOutDeviceInfo As SoundDeviceInfo
+	SoundSoundOutDeviceInfo.Channels = 2
+	SoundSoundOutDeviceInfo.SamplesPerSecond = 22050
+	SoundSoundOutDeviceInfo.BitsPerSample = 16
+	
+	Set Keyboard = New KeyboardDevice
+	Keyboard.Name = "Keyboard"
+
+	Dim KeyboardKeyboardDeviceInfo as KeyboardDeviceInfo
+	KeyboardKeyboardDeviceInfo.CollectionMode = ebPressesOnly
+	KeyboardKeyboardDeviceInfo.CapsLock = ebCapsLockOff
+	KeyboardKeyboardDeviceInfo.NumLock = ebNumLockOff
+	Keyboard.Open KeyboardKeyboardDeviceInfo
+	
+	Set Mouse = New MouseDevice
+	Mouse.Name = "Mouse"
+
+	Dim MouseMouseDeviceInfo as MouseDeviceInfo
+	MouseMouseDeviceInfo.OpenMode = ebMouseOpenModeDirect
+	MouseMouseDeviceInfo.CollectionMode = ebPressesOnly
+	MouseMouseDeviceInfo.ShowCursor = False
+	Mouse.Open MouseMouseDeviceInfo
+
+
+	SetOSThreadPriority 0
+
+End Sub
+
+
+
+'--------------------------------------------------------------------------
+' InitObjects
+'
+'--------------------------------------------------------------------------
+Sub InitObjects(c As Context)
+
+	Set SessionProc = New Procedure
+	SessionProc.Name = "SessionProc"
+	SessionProc.Tag = ""
+	SessionProc.Subroutine = "SessionProc_Run"
+
+	Set BlockList = New List
+	BlockList.Name = "BlockList"
+	BlockList.Tag = ""
+
+	'Initialization for BlockList
+	
+	Set BlockList.Order = New SequentialOrder
+	Set BlockList.Deletion = NoDeletion
+	BlockList.ResetEveryRun = False
+
+	' Create the column headings
+	BlockList.AddAttrib "BlockVar1"
+	BlockList.AddAttrib "PracticeMode"
+	BlockList.Filename = ""
+	BlockList.LoadMethod = ebLoadMethodEmbedded
+
+	BlockList.Load
+
+	Set BlockList.TerminateCondition = Cycles(1)
+	Set BlockList.ResetCondition = Samples(1)
+	BlockList.Reset
+	
+	Set TrialList = New List
+	TrialList.Name = "TrialList"
+	TrialList.Tag = ""
+
+	'Initialization for TrialList
+	
+	Set TrialList.Order = New SequentialOrder
+	Set TrialList.Deletion = NoDeletion
+	TrialList.ResetEveryRun = False
+
+	' Create the column headings
+	TrialList.AddAttrib "Circle"
+	TrialList.AddAttrib "Crystal"
+	TrialList.AddAttrib "Square"
+	TrialList.AddAttrib "Diamond"
+	TrialList.Filename = ""
+	TrialList.LoadMethod = ebLoadMethodEmbedded
+
+	TrialList.Load
+
+	Set TrialList.TerminateCondition = Cycles(26)
+	Set TrialList.ResetCondition = Samples(90)
+	TrialList.Reset
+	
+	Set TrialProc = New Procedure
+	TrialProc.Name = "TrialProc"
+	TrialProc.Tag = ""
+	TrialProc.Subroutine = "TrialProc_Run"
+
+	Set BlockProc = New Procedure
+	BlockProc.Name = "BlockProc"
+	BlockProc.Tag = ""
+	BlockProc.Subroutine = "BlockProc_Run"
+
+	Set Instructions = New TextDisplay
+	Instructions.Name = "Instructions"
+	Instructions.Tag = ""
+
+	Set InstructionsEchoClients = New EchoClientCollection
+	Instructions.Text = "This is a computerized test of brain function.\n\nPress the SPACE bar when you are ready to" &_ 
+				" proceed."
+	Instructions.WordWrap = True
+	Instructions.BackStyle = "opaque"
+	Instructions.BackColor = CColor("black")
+	Instructions.BorderColor = CColor("black")
+	Instructions.BorderWidth = CLng("0")
+	Instructions.ForeColor = CColor("white")
+	Instructions.X = "center"
+	Instructions.Y = "center"
+	Instructions.Width = "100%"
+	Instructions.Height = "100%"
+	Instructions.XAlign = "center"
+	Instructions.YAlign = "center"
+	Instructions.AlignVertical = "center"
+	Instructions.AlignHorizontal = "center"
+	Instructions.FontName = "Courier New"
+	Instructions.FontSize = "18"
+	Instructions.FontBold = CLogical("Yes")
+	Instructions.FontItalic = CLogical("No")
+	Instructions.FontUnderline = CLogical("No")
+	Instructions.FontStrikeout = CLogical("No")
+	Instructions.ClearAfter = CLogical("No")
+	Instructions.Duration = CLng("-1")
+	Instructions.TimingMode = ebTimingModeEvent
+	Instructions.PreRelease = Val("0")
+
+	Instructions.OnsetSync = 1
+	Instructions.OffsetSync = 0
+
+	Set Tokens = New ImageDisplay
+	Tokens.Name = "Tokens"
+	Tokens.Tag = ""
+
+
+'	theImageDisplay.BackColor = CColor("black")
+
+
+	Set TokensEchoClients = New EchoClientCollection
+	Tokens.Filename = "0.bmp"
+	Tokens.Load
+	Tokens.Stretch = CLogical("No")
+	Tokens.MirrorLeftRight = CLogical("No")
+	Tokens.MirrorUpDown = CLogical("No")
+	Tokens.BackStyle = "opaque"
+	Tokens.BackColor = CColor("black")
+	Tokens.BorderColor = CColor("black")
+	Tokens.BorderWidth = CLng("0")
+	Tokens.X = "center"
+	Tokens.Y = "center"
+	Tokens.Width = "100%"
+	Tokens.Height = "100%"
+	Tokens.XAlign = "center"
+	Tokens.YAlign = "center"
+	Tokens.AlignVertical = "center"
+	Tokens.AlignHorizontal = "center"
+	Tokens.ClearAfter = CLogical("No")
+	Tokens.UseSourceColorKey = CLogical("No")
+	Tokens.SourceColorKey = CColor("black")
+	Tokens.Duration = CLng("-1")
+	Tokens.TimingMode = ebTimingModeEvent
+	Tokens.PreRelease = Val("0")
+
+	Tokens.OnsetSync = 1
+	Tokens.OffsetSync = 0
+
+	Set Inst02 = New TextDisplay
+	Inst02.Name = "Inst02"
+	Inst02.Tag = ""
+
+	Set Inst02EchoClients = New EchoClientCollection
+	Inst02.Text = "You will see four tokens displayed on the screen. Each token has both rewards and penalties associated with it. Choose a token by pressing its key, an" &_ 
+				"d you will be either rewarded or penalized. This is shown as two values on the screen (for example):\n100\n1250\nThe top number is the points received" &_ 
+				" on the token just chosen. The bottom is the running total of how many points you have. You start with 0 points. You can choose any token, and can swi" &_ 
+				"tch tokens at any time. The goal is to earn as many points as possible. This is not random; you can earn more by choosing the right token(s).\nPress t" &_ 
+				"he SPACE bar to begin."
+	Inst02.WordWrap = True
+	Inst02.BackStyle = "opaque"
+	Inst02.BackColor = CColor("black")
+	Inst02.BorderColor = CColor("black")
+	Inst02.BorderWidth = CLng("0")
+	Inst02.ForeColor = CColor("white")
+	Inst02.X = "center"
+	Inst02.Y = "center"
+	Inst02.Width = "100%"
+	Inst02.Height = "100%"
+	Inst02.XAlign = "center"
+	Inst02.YAlign = "center"
+	Inst02.AlignVertical = "center"
+	Inst02.AlignHorizontal = "center"
+	Inst02.FontName = "Courier New"
+	Inst02.FontSize = "18"
+	Inst02.FontBold = CLogical("Yes")
+	Inst02.FontItalic = CLogical("No")
+	Inst02.FontUnderline = CLogical("No")
+	Inst02.FontStrikeout = CLogical("No")
+	Inst02.ClearAfter = CLogical("No")
+	Inst02.Duration = CLng("-1")
+	Inst02.TimingMode = ebTimingModeEvent
+	Inst02.PreRelease = Val("0")
+
+	Inst02.OnsetSync = 1
+	Inst02.OffsetSync = 0
+
+	Set Feedback = New FeedbackDisplay
+	Feedback.Name = "Feedback"
+	Feedback.Tag = ""
+
+		Feedback.ACCDivisor = "1.0"
+	Feedback.ACCFormat = "Percent"
+	Feedback.RTDivisor = "1000.0"
+	Feedback.RTFormat = "###0.000"
+	Feedback.CorrectRTDivisor = "1000.0"
+	Feedback.CorrectRTFormat = "###0.000"
+	Feedback.IncorrectRTDivisor = "1000.0"
+	Feedback.IncorrectRTFormat = "###0.000"
+	Feedback.CollectNoRespACCStats = True
+	Feedback.Duration = CLng("1000")
+	Feedback.TimingMode = ebTimingModeEvent
+	Feedback.PreRelease = Val("0")
+
+	Feedback.OnsetSync = 1
+	Feedback.OffsetSync = 0
+
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "Correct"
+	Feedback_State.X = "center"
+	Feedback_State.Y = "center"
+	Feedback_State.Width = "100%"
+	Feedback_State.Height = "100%"
+	Feedback_State.XAlign = "center"
+	Feedback_State.YAlign = "center"
+	Feedback_State.BorderColor = CColor("black")
+	Feedback_State.BorderWidth = CLng("0")
+	Feedback_State.BackColor = CColor("black")
+	Feedback_State.BackStyle = "opaque"
+	Feedback_State.ClearAfter = CLogical("Yes")
+	Feedback_State.Enabled = CLogical("Yes")
+
+	Feedback.States.Add Feedback_State, "Correct"
+
+	
+	Set Feedback_SlideText = New SlideText
+	Feedback_SlideText.Name = "Text3"
+	Feedback_SlideText.X = "58%"
+	Feedback_SlideText.Y = "59%"
+	Feedback_SlideText.Width = "23%"
+	Feedback_SlideText.Height = "8%"
+	Feedback_SlideText.ForeColor = CColor("white")
+	Feedback_SlideText.BackColor = CColor("black")
+	Feedback_SlideText.BackStyle = "transparent"
+	Feedback_SlideText.WordWrap = True
+	Feedback_SlideText.BorderColor = CColor("black")
+	Feedback_SlideText.BorderWidth = CLng("0")
+	Feedback_SlideText.XAlign = "center"
+	Feedback_SlideText.YAlign = "center"
+	Feedback_SlideText.AlignHorizontal = "left"
+	Feedback_SlideText.AlignVertical = "center"
+	Feedback_SlideText.FontName = "Courier New"
+	Feedback_SlideText.FontSize = "18"
+	Feedback_SlideText.FontBold = CLogical("Yes")
+	Feedback_SlideText.FontItalic = CLogical("No")
+	Feedback_SlideText.FontUnderline = CLogical("No")
+	Feedback_SlideText.FontStrikeout = CLogical("No")
+	Feedback.States.Item("Correct").Objects.Add Feedback_SlideText, "Text3"
+
+	Set Feedback_SlideText = New SlideText
+	Feedback_SlideText.Name = "var"
+	Feedback_SlideText.X = "52%"
+	Feedback_SlideText.Y = "44%"
+	Feedback_SlideText.Width = "11%"
+	Feedback_SlideText.Height = "8%"
+	Feedback_SlideText.ForeColor = CColor("white")
+	Feedback_SlideText.BackColor = CColor("black")
+	Feedback_SlideText.BackStyle = "transparent"
+	Feedback_SlideText.WordWrap = True
+	Feedback_SlideText.BorderColor = CColor("black")
+	Feedback_SlideText.BorderWidth = CLng("0")
+	Feedback_SlideText.XAlign = "center"
+	Feedback_SlideText.YAlign = "center"
+	Feedback_SlideText.AlignHorizontal = "left"
+	Feedback_SlideText.AlignVertical = "center"
+	Feedback_SlideText.FontName = "Courier New"
+	Feedback_SlideText.FontSize = "18"
+	Feedback_SlideText.FontBold = CLogical("Yes")
+	Feedback_SlideText.FontItalic = CLogical("No")
+	Feedback_SlideText.FontUnderline = CLogical("No")
+	Feedback_SlideText.FontStrikeout = CLogical("No")
+	Feedback.States.Item("Correct").Objects.Add Feedback_SlideText, "var"
+
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "Incorrect"
+	Feedback_State.X = "center"
+	Feedback_State.Y = "center"
+	Feedback_State.Width = "100%"
+	Feedback_State.Height = "100%"
+	Feedback_State.XAlign = "center"
+	Feedback_State.YAlign = "center"
+	Feedback_State.BorderColor = CColor("black")
+	Feedback_State.BorderWidth = CLng("0")
+	Feedback_State.BackColor = CColor("yellow")
+	Feedback_State.BackStyle = "opaque"
+	Feedback_State.ClearAfter = CLogical("No")
+	Feedback_State.Enabled = CLogical("Yes")
+
+	Feedback.States.Add Feedback_State, "Incorrect"
+
+	
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "NoResponse"
+	Feedback_State.X = "center"
+	Feedback_State.Y = "center"
+	Feedback_State.Width = "100%"
+	Feedback_State.Height = "100%"
+	Feedback_State.XAlign = "center"
+	Feedback_State.YAlign = "center"
+	Feedback_State.BorderColor = CColor("black")
+	Feedback_State.BorderWidth = CLng("0")
+	Feedback_State.BackColor = CColor("blue")
+	Feedback_State.BackStyle = "opaque"
+	Feedback_State.ClearAfter = CLogical("No")
+	Feedback_State.Enabled = CLogical("Yes")
+
+	Feedback.States.Add Feedback_State, "NoResponse"
+
+	
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "Pending"
+	Feedback_State.X = "center"
+	Feedback_State.Y = "center"
+	Feedback_State.Width = "100%"
+	Feedback_State.Height = "100%"
+	Feedback_State.XAlign = "center"
+	Feedback_State.YAlign = "center"
+	Feedback_State.BorderColor = CColor("black")
+	Feedback_State.BorderWidth = CLng("0")
+	Feedback_State.BackColor = CColor("purple")
+	Feedback_State.BackStyle = "opaque"
+	Feedback_State.ClearAfter = CLogical("No")
+	Feedback_State.Enabled = CLogical("Yes")
+
+	Feedback.States.Add Feedback_State, "Pending"
+
+	
+
+End Sub
+
+
+'--------------------------------------------------------------------------
+' InitPackages
+'
+'--------------------------------------------------------------------------
+Sub InitPackages(c As Context)
+
+End Sub
+
+
+
+'--------------------------------------------------------------------------
+'--------------------------------------------------------------------------
+' UnInitDevices
+'--------------------------------------------------------------------------
+Sub UnInitDevices()
+	Display.Close
+	Set Display = Nothing
+
+	Keyboard.Close
+	Set Keyboard = Nothing
+
+	Mouse.Close
+	Set Mouse = Nothing
+
+End Sub
+
+
+'--------------------------------------------------------------------------
+'--------------------------------------------------------------------------
+' UnInitPackages
+'--------------------------------------------------------------------------
+Sub UnInitPackages()
+End Sub
+
+
+'--------------------------------------------------------------------------
+' UnInitObjects
+'
+'--------------------------------------------------------------------------
+Sub UnInitObjects()
+
+	Set SessionProc = Nothing
+
+	Set BlockList = Nothing
+
+	Set TrialList = Nothing
+
+	Set TrialProc = Nothing
+
+	Set BlockProc = Nothing
+
+	Set Instructions = Nothing
+
+	Set InstructionsEchoClients = Nothing
+
+	Set Tokens = Nothing
+
+	Set TokensEchoClients = Nothing
+
+	Set Inst02 = Nothing
+
+	Set Inst02EchoClients = Nothing
+
+	Set Feedback = Nothing
+
+
+End Sub
+
+
+'--------------------------------------------------------------------------
+' Main
+'
+'--------------------------------------------------------------------------
+Sub Main()
+
+	CreateDefaultPort
+
+	' Create and initialize the default context, data file,
+	' and provide global access to the context.
+	Dim c As Context
+	Set c = New Context
+	Set c.DataFile = New DataFile
+	c.PushNewFrame
+	Set ebContext = c
+
+	' Set the log level names
+	c.SetLogLevelName 1, "Session"
+	c.SetLogLevelName 2, "Block"
+	c.SetLogLevelName 3, "Trial"
+	c.SetLogLevelName 4, "SubTrial"
+	c.SetLogLevelName 5, "LogLevel5"
+	c.SetLogLevelName 6, "LogLevel6"
+	c.SetLogLevelName 7, "LogLevel7"
+	c.SetLogLevelName 8, "LogLevel8"
+	c.SetLogLevelName 9, "LogLevel9"
+	c.SetLogLevelName 10, "LogLevel10"
+
+	' Set standard logging items
+	ebContext.SetAttrib "Experiment", "FourTokens"
+	ebContext.SetAttrib "SessionDate", Date$
+	ebContext.SetAttrib "SessionTime", Time$
+	ebContext.SetAttrib "RandomSeed", PRNG.GetSeed()
+
+	If Basic.OS = ebWin32 Then
+		WinActivate "E-Run Experiment Window"
+	End If
+
+	' Get the StartupInfo
+	' Set default for GroupNumber
+	c.SetAttrib "Group", "1"
+
+
+	' Set the defaults for all of the StartupInfo
+	c.SetAttrib "Subject", "1"
+	c.SetAttrib "Session", "1"
+	c.SetAttrib "Name", ""
+	c.SetAttrib "Age", "0"
+	c.SetAttrib "Sex", "male"
+	c.SetAttrib "Handedness", "left"
+
+	Dim vAnswer As Variant
+StartupInfo_Begin:
+
+StartupInfoPrompt_Subject:
+	vAnswer = AskBox("Please enter the Subject Number (1-32767, 0=No Data Logging):", c.GetAttrib("Subject"))
+	If Not IsEmpty(vAnswer) then
+		If Not IsNumeric(vAnswer) then
+			MsgBox "Please enter an integer value"
+			GoTo StartupInfoPrompt_Subject
+		ElseIf CLng(vAnswer) < 0 Then
+			MsgBox "The value for Subject must not be less than 0"
+			GoTo StartupInfoPrompt_Subject
+		ElseIf CLng(vAnswer) > 32767 Then
+			MsgBox "The value for Subject must be not be greater than 32767"
+			GoTo StartupInfoPrompt_Subject
+		End If
+	Else
+		GoTo ExperimentAbort
+	End if
+
+	c.SetAttrib "Subject", CStr(vAnswer)
+
+StartupInfoPrompt_Session:
+	vAnswer = AskBox("Please enter the Session Number (0-32767):", c.GetAttrib("Session"))
+	If Not IsEmpty(vAnswer) then
+		If Not IsNumeric(vAnswer) then
+			MsgBox "Please enter an integer value"
+			GoTo StartupInfoPrompt_Session
+		ElseIf CLng(vAnswer) < 0 Then
+			MsgBox "The value for Session must not be less than 0"
+			GoTo StartupInfoPrompt_Session
+		ElseIf CLng(vAnswer) > 32767 Then
+			MsgBox "The value for Session must be not be greater than 32767"
+			GoTo StartupInfoPrompt_Session
+		End If
+	Else
+		GoTo ExperimentAbort
+	End if
+
+	c.SetAttrib "Session", CStr(vAnswer)
+
+StartupInfoPrompt_Name:
+	vAnswer = AskBox("Please enter Subject's Name:", c.GetAttrib("Name"))
+	If Not IsEmpty(vAnswer) then
+		If Len(CStr(vAnswer)) > 255 Then
+		MsgBox "The length for Name must be not be greater than 255"
+			GoTo StartupInfoPrompt_Name
+		End If
+	Else
+		GoTo ExperimentAbort
+	End if
+
+	c.SetAttrib "Name", CStr(vAnswer)
+
+StartupInfoPrompt_Age:
+	vAnswer = AskBox("Please enter Subject's Age (0-150):", c.GetAttrib("Age"))
+	If Not IsEmpty(vAnswer) then
+		If Not IsNumeric(vAnswer) then
+			MsgBox "Please enter an integer value"
+			GoTo StartupInfoPrompt_Age
+		ElseIf CLng(vAnswer) < 0 Then
+			MsgBox "The value for Age must not be less than 0"
+			GoTo StartupInfoPrompt_Age
+		ElseIf CLng(vAnswer) > 150 Then
+			MsgBox "The value for Age must be not be greater than 150"
+			GoTo StartupInfoPrompt_Age
+		End If
+	Else
+		GoTo ExperimentAbort
+	End if
+
+	c.SetAttrib "Age", CStr(vAnswer)
+
+StartupInfoPrompt_Sex:
+Dim arrayChoicesSex(2)
+	arrayChoicesSex(0) = "male"
+	arrayChoicesSex(1) = "female"
+	vAnswer = SelectBox(, "Please enter Subject's Sex:", arrayChoicesSex)
+	If vAnswer >= 0 then
+		c.SetAttrib "Sex", arrayChoicesSex(vAnswer)
+	Else
+		GoTo ExperimentAbort
+	End If
+
+StartupInfoPrompt_Handedness:
+Dim arrayChoicesHandedness(2)
+	arrayChoicesHandedness(0) = "left"
+	arrayChoicesHandedness(1) = "right"
+	vAnswer = SelectBox(, "Enter Subject's Handedness:", arrayChoicesHandedness)
+	If vAnswer >= 0 then
+		c.SetAttrib "Handedness", arrayChoicesHandedness(vAnswer)
+	Else
+		GoTo ExperimentAbort
+	End If
+
+
+	c.SetAttrib "Name", CStr(vAnswer)
+
+	' Display the summary
+	Dim strSummary As String
+	strSummary = "Subject:    " & c.GetAttrib("Subject") & "\n"
+	strSummary = strSummary & "Session:    " & c.GetAttrib("Session") & "\n"
+	strSummary = strSummary & "Name:    " & c.GetAttrib("Name") & "\n"
+	strSummary = strSummary & "Age:    " & c.GetAttrib("Age") & "\n"
+	strSummary = strSummary & "Sex:    " & c.GetAttrib("Sex") & "\n"
+	strSummary = strSummary & "Handedness:    " & c.GetAttrib("Handedness") & "\n"
+	strSummary = strSummary & "\nContinue with the above startup info?"
+
+	Dim nSummaryAnswer As Integer
+	nSummaryAnswer = MsgBox(strSummary, ebYesNoCancel + ebQuestion, "Summary of Startup Info")
+	If nSummaryAnswer = ebNo Then
+		GoTo StartupInfo_Begin
+	ElseIf nSummaryAnswer = ebCancel Then
+		GoTo ExperimentAbort
+	End If
+
+
+	' Set the default Data Filename
+	c.DataFile.Filename = CStr(c.GetAttrib("Experiment")) & "-" & CStr(c.GetAttrib("Subject")) & "-" & CStr(c.GetAttrib("Session")) & ".txt"
+
+	' If we are logging data, then prompt to overwrite the data file if it exists
+	If CLng(c.GetAttrib("Subject")) <> 0 Then
+		If FileExists(c.DataFile.Filename) Then
+			If ebYes <> MsgBox("WARNING: The data file and/or recovery file already exists:\nFILE: " & c.DataFile.Filename & "\n\nDo you want to overwrite?", ebYesNo + ebQuestion) Then
+				GoTo ExperimentAbort
+			End If
+		End If
+	End If
+
+	' Initialize all system devices, packages, and objects
+	InitDevices c
+	InitPackages c
+	InitObjects c
+
+	' If we are logging data, then open the datafile
+	If CLng(c.GetAttrib("Subject")) <> 0 Then
+		c.DataFile.Open
+		c.LogHeader
+	End If
+
+	' Start the running of the Experiment
+	SessionProc.Run c
+
+	' Clean up the context and close the datafile
+	If CLng(c.GetAttrib("Subject")) <> 0 Then
+		c.DataFile.Close
+		' Attempt to convert the recovery file into a data file
+		Dim nConvert As Long
+		nConvert = c.DataFile.Convert(ebProgressSimple)
+		If nConvert = 0 Then
+			' Settings in E-Studio are set to not remove E-Recovery file
+		Else
+			' The datafile failed to convert!
+			MsgBox "ERROR: The datafile did not convert!\nFILE: " & c.DataFile.Filename & "\n\nIt is recommended that you recover your data with the E-Recovery utility"
+			MsgBox c.DataFile.GetLastErrorMessage()
+		End If
+	End If
+ExperimentFinish:
+
+	UnInitObjects
+
+	UnInitPackages
+	UnInitDevices
+
+ExperimentAbort:
+
+	' Clean up the context
+	c.PopFrame
+	Set c = Nothing
+	Set ebContext = Nothing
+
+	DestroyDefaultPort
+
+End Sub
+
+
+[DataSection_BlockList(1)]
+Weight	Nested	Procedure	BlockVar1	PracticeMode
+1		BlockProc	?	?\0
+
+[DataSection_TrialList(1)]
+Weight	Nested	Procedure	Circle	Crystal	Square	Diamond
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-125	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	-2150	-125	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-125	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	-2150	-125	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-125	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	150	200  \0

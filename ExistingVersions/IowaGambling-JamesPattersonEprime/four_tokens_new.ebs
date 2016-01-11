@@ -1,0 +1,971 @@
+'
+'
+'
+'	C:\Research\cognitive_tasks\Four_Tokens\four_tokens_new.ebs
+'	Generated on: 10/13/2002	5:08:47
+'
+'
+'	Author:
+'		  (LSUHSC-S)
+'
+'
+'
+'
+
+Option CStrings On
+Dim ebContext as Context
+
+
+'--------------------------------------------------------------------------
+' Class Declarations
+'--------------------------------------------------------------------------
+
+
+
+'--------------------------------------------------------------------------
+'InitImageDisplayDefaults
+'--------------------------------------------------------------------------
+Sub InitImageDisplayDefaults(theImageDisplay As ImageDisplay)
+
+	If theImageDisplay Is Nothing Then Exit Sub
+
+	theImageDisplay.X = "center"
+	theImageDisplay.Y = "center"
+	theImageDisplay.Width = "100%"
+	theImageDisplay.Height = "100%"
+	theImageDisplay.BackColor = CColor("black")
+	theImageDisplay.BackStyle = "opaque"
+	theImageDisplay.BorderColor = CColor("black")
+	theImageDisplay.BorderWidth = CLng("0")
+	theImageDisplay.XAlign = "center"
+	theImageDisplay.YAlign = "center"
+	theImageDisplay.AlignHorizontal = "center"
+	theImageDisplay.AlignVertical = "center"
+	theImageDisplay.ClearAfter = CLogical("No")
+	theImageDisplay.UseSourceColorKey = CLogical("No")
+	theImageDisplay.SourceColorKey = CColor("black")
+	theImageDisplay.MirrorLeftRight = CLogical("No")
+	theImageDisplay.MirrorUpDown = CLogical("No")
+	theImageDisplay.Stretch = CLogical("No")
+
+End Sub
+
+
+
+
+
+'--------------------------------------------------------------------------
+'InitTextDisplayDefaults
+'--------------------------------------------------------------------------
+Sub InitTextDisplayDefaults(theTextDisplay As TextDisplay)
+
+	If theTextDisplay Is Nothing Then Exit Sub
+
+	theTextDisplay.X = "center"
+	theTextDisplay.Y = "center"
+	theTextDisplay.Width = "100%"
+	theTextDisplay.Height = "100%"
+	theTextDisplay.ForeColor = CColor("black")
+	theTextDisplay.BackColor = CColor("white")
+	theTextDisplay.BackStyle = "opaque"
+	theTextDisplay.BorderColor = CColor("black")
+	theTextDisplay.BorderWidth = CLng("0")
+	theTextDisplay.XAlign = "center"
+	theTextDisplay.YAlign = "center"
+	theTextDisplay.AlignHorizontal = "center"
+	theTextDisplay.AlignVertical = "center"
+	theTextDisplay.WordWrap = True
+	theTextDisplay.ClearAfter = CLogical("No")
+	theTextDisplay.FontName = "Courier New"
+	theTextDisplay.FontSize = "18"
+	theTextDisplay.FontBold = CLogical("Yes")
+	theTextDisplay.FontItalic = CLogical("No")
+	theTextDisplay.FontUnderline = CLogical("No")
+	theTextDisplay.FontStrikeout = CLogical("No")
+
+End Sub
+
+
+
+
+
+'--------------------------------------------------------------------------
+'InitSlideStateDefaults
+'--------------------------------------------------------------------------
+Sub InitSlideStateDefaults(theSlideState As SlideState)
+
+	If theSlideState Is Nothing Then Exit Sub
+
+	theSlideState.X = "center"
+	theSlideState.Y = "center"
+	theSlideState.Width = "100%"
+	theSlideState.Height = "100%"
+	theSlideState.BackColor = CColor("white")
+	theSlideState.BackStyle = "opaque"
+	theSlideState.BorderColor = CColor("black")
+	theSlideState.BorderWidth = CLng("0")
+	theSlideState.XAlign = "center"
+	theSlideState.YAlign = "center"
+	theSlideState.ClearAfter = CLogical("No")
+	theSlideState.Enabled = CLogical("Yes")
+
+End Sub
+
+'--------------------------------------------------------------------------
+'InitSlideVisualStimDefaults
+'--------------------------------------------------------------------------
+Sub InitSlideVisualStimDefaults(theSlideVisualStim As SlideVisualStim)
+
+	If theSlideVisualStim Is Nothing Then Exit Sub
+
+	theSlideVisualStim.X = "center"
+	theSlideVisualStim.Y = "center"
+	theSlideVisualStim.Width = "25%"
+	theSlideVisualStim.Height = "25%"
+	theSlideVisualStim.ForeColor = CColor("black")
+	theSlideVisualStim.BackColor = CColor("white")
+	theSlideVisualStim.BackStyle = "opaque"
+	theSlideVisualStim.BorderColor = CColor("black")
+	theSlideVisualStim.BorderWidth = CLng("0")
+	theSlideVisualStim.XAlign = "center"
+	theSlideVisualStim.YAlign = "center"
+	theSlideVisualStim.AlignHorizontal = "center"
+	theSlideVisualStim.AlignVertical = "center"
+
+End Sub
+
+'--------------------------------------------------------------------------
+'InitSlideTextDefaults
+'--------------------------------------------------------------------------
+Sub InitSlideTextDefaults(theSlideText As SlideText)
+
+	If theSlideText Is Nothing Then Exit Sub
+
+	InitSlideVisualStimDefaults theSlideText
+
+	theSlideText.WordWrap = True
+	theSlideText.FontName = "Courier New"
+	theSlideText.FontSize = "18"
+	theSlideText.FontBold = CLogical("Yes")
+	theSlideText.FontItalic = CLogical("No")
+	theSlideText.FontUnderline = CLogical("No")
+	theSlideText.FontStrikeout = CLogical("No")
+
+End Sub
+
+'--------------------------------------------------------------------------
+'InitSlideImageDefaults
+'--------------------------------------------------------------------------
+Sub InitSlideImageDefaults(theSlideImage As SlideImage)
+
+	If theSlideImage Is Nothing Then Exit Sub
+
+	InitSlideVisualStimDefaults theSlideImage
+
+	theSlideImage.Stretch = CLogical("No")
+	theSlideImage.MirrorLeftRight = CLogical("No")
+	theSlideImage.MirrorUpDown = CLogical("No")
+	theSlideImage.UseSourceColorKey = CLogical("No")
+	theSlideImage.SourceColorKey = CColor("black")
+
+End Sub
+
+'--------------------------------------------------------------------------
+'InitSlideSoundBufferDefaults
+'--------------------------------------------------------------------------
+Sub InitSlideSoundBufferDefaults(theSoundBuffer As SoundBuffer)
+
+	If theSoundBuffer Is Nothing Then Exit Sub
+
+	theSoundBuffer.Loop = CLogical("No")
+	theSoundBuffer.StopAfter = CLogical("Yes")
+	theSoundBuffer.StartOffset = "0"
+	theSoundBuffer.StopOffset = "0"
+
+End Sub
+
+
+
+
+'--------------------------------------------------------------------------
+' Instance Declarations
+'--------------------------------------------------------------------------
+Dim Display As DisplayDevice
+Dim Sound As SoundDevice
+Dim Keyboard As KeyboardDevice
+Dim Mouse As MouseDevice
+Dim SessionProc As Procedure
+
+Dim BlockList As List
+
+Dim BlockProc As Procedure
+
+Dim Tokens As ImageDisplay
+Dim TokensEchoClients As EchoClientCollection
+
+Dim TrialList As List
+
+Dim TrialProc As Procedure
+
+Dim Instructions As TextDisplay
+Dim InstructionsEchoClients As EchoClientCollection
+
+Dim Feedback As FeedbackDisplay
+Dim Feedback_State As SlideState
+Dim Feedback_SlideText As SlideText
+
+
+
+'--------------------------------------------------------------------------
+' Package Declare Script
+'--------------------------------------------------------------------------
+
+
+
+'--------------------------------------------------------------------------
+' User Script
+'--------------------------------------------------------------------------
+Dim totalsum As integer
+Dim var As integer
+
+
+
+'--------------------------------------------------------------------------
+' Package Global Script
+'--------------------------------------------------------------------------
+
+
+
+'--------------------------------------------------------------------------
+' Package Routines
+'--------------------------------------------------------------------------
+
+
+
+'--------------------------------------------------------------------------
+' Implementation
+'--------------------------------------------------------------------------
+Sub SessionProc_Run(c as Context)
+	BlockList.Run c
+
+	c.Log
+End Sub
+
+Sub BlockProc_Run(c as Context)
+	
+	
+	Instructions.InputMasks.Reset
+	
+	InstructionsEchoClients.RemoveAll
+	Instructions.InputMasks.Add Keyboard.CreateInputMask("{ANY}", "", CLng(Instructions.Duration), CLng("1"), ebEndResponseActionTerminate, CLogical("Yes"), "", "", "ResponseMode:All ProcessBackspace:Yes")
+
+	
+	Instructions.Run
+	TrialList.Run c
+
+	c.Log
+End Sub
+
+Sub TrialProc_Run(c as Context)
+	
+	
+	Tokens.InputMasks.Reset
+	
+	TokensEchoClients.RemoveAll
+	Tokens.InputMasks.Add Keyboard.CreateInputMask("ricm", "ricm", CLng(Tokens.Duration), CLng("1"), ebEndResponseActionTerminate, CLogical("Yes"), "", "", "ResponseMode:All ProcessBackspace:Yes")
+
+	
+	Tokens.Run
+	c.SetAttrib "Tokens.OnsetDelay", Tokens.OnsetDelay
+	c.SetAttrib "Tokens.OnsetTime", Tokens.OnsetTime
+	c.SetAttrib "Tokens.DurationError", Tokens.DurationError
+	c.SetAttrib "Tokens.RTTime", Tokens.RTTime
+	c.SetAttrib "Tokens.ACC", Tokens.ACC
+	c.SetAttrib "Tokens.RT", Tokens.RT
+	c.SetAttrib "Tokens.RESP", Tokens.RESP
+	c.SetAttrib "Tokens.CRESP", Tokens.CRESP
+	
+	
+	'''''''''''''''''''''''''''''''''''''''''''''
+	' InLine - InLine1 BEGIN
+	'''''''''''''''''''''''''''''''''''''''''''''
+	
+
+if Tokens.RESP = "r" then
+	var = c.getAttrib ("circle")
+	totalsum = totalsum + var
+end if
+if Tokens.RESP = "i" then
+	var = c.getAttrib ("crystal")
+	totalsum = totalsum + var
+end if
+if Tokens.RESP = "c" then
+	var = c.getAttrib ("square")
+	totalsum = totalsum + var
+end if
+if Tokens.RESP = "m" then
+	var = c.getAttrib ("diamond")
+	totalsum = totalsum + var
+end if
+
+	c.SetAttrib "totalsum", totalsum
+	c.SetAttrib "var", var
+
+	'''''''''''''''''''''''''''''''''''''''''''''
+	' InLine - InLine1 END
+	'''''''''''''''''''''''''''''''''''''''''''''
+	
+	
+	
+	Select Case Feedback.ActiveState
+		Case "Correct"
+
+
+			Set Feedback_SlideText = CSlideText(Feedback.States.Item("Correct").Objects(1))
+			Feedback_SlideText.Text = c.GetAttrib("t" &_ 
+				"otalsum") &_ 
+				"\n"
+			Set Feedback_SlideText = Nothing
+
+			Set Feedback_SlideText = CSlideText(Feedback.States.Item("Correct").Objects(2))
+			Feedback_SlideText.Text = c.GetAttrib("v" &_ 
+				"ar") &_ 
+				"\n"
+			Set Feedback_SlideText = Nothing
+		Case "Incorrect"
+
+		Case "NoResponse"
+
+		Case "Pending"
+
+	End Select
+
+	
+
+	Feedback.Run
+
+	
+	c.SetAttrib "Tokens.OnsetDelay", Tokens.OnsetDelay
+	c.SetAttrib "Tokens.OnsetTime", Tokens.OnsetTime
+	c.SetAttrib "Tokens.DurationError", Tokens.DurationError
+	c.SetAttrib "Tokens.RTTime", Tokens.RTTime
+	c.SetAttrib "Tokens.ACC", Tokens.ACC
+	c.SetAttrib "Tokens.RT", Tokens.RT
+	c.SetAttrib "Tokens.RESP", Tokens.RESP
+	c.SetAttrib "Tokens.CRESP", Tokens.CRESP
+	
+
+	c.Log
+End Sub
+
+
+
+
+
+'--------------------------------------------------------------------------
+' InitDevices
+'
+'--------------------------------------------------------------------------
+Sub InitDevices(c As Context)
+
+
+
+	SetOSThreadPriority 3
+
+
+	Set Display = New DisplayDevice
+	Display.Name = "Display"
+
+	Dim DisplayDisplayDeviceInfo As DisplayDeviceInfo
+	DisplayDisplayDeviceInfo.XRes = 640
+	DisplayDisplayDeviceInfo.YRes = 480
+	DisplayDisplayDeviceInfo.ColorDepth = 16
+	DisplayDisplayDeviceInfo.RefreshRate = 0
+	DisplayDisplayDeviceInfo.NumPages = 0
+
+	Display.Open DisplayDisplayDeviceInfo
+	c.SetAttrib "Display.RefreshRate", Format$(Display.CalculatedRefreshRate, "0.000")
+
+	Set Sound = New SoundDevice
+	Sound.Name = "Sound"
+
+	Dim SoundSoundOutDeviceInfo As SoundDeviceInfo
+	SoundSoundOutDeviceInfo.Channels = 2
+	SoundSoundOutDeviceInfo.SamplesPerSecond = 22050
+	SoundSoundOutDeviceInfo.BitsPerSample = 16
+	
+	Set Keyboard = New KeyboardDevice
+	Keyboard.Name = "Keyboard"
+
+	Dim KeyboardKeyboardDeviceInfo as KeyboardDeviceInfo
+	KeyboardKeyboardDeviceInfo.CollectionMode = ebPressesOnly
+	KeyboardKeyboardDeviceInfo.CapsLock = ebCapsLockOff
+	KeyboardKeyboardDeviceInfo.NumLock = ebNumLockOn
+	Keyboard.Open KeyboardKeyboardDeviceInfo
+	
+	Set Mouse = New MouseDevice
+	Mouse.Name = "Mouse"
+
+	Dim MouseMouseDeviceInfo as MouseDeviceInfo
+	MouseMouseDeviceInfo.OpenMode = ebMouseOpenModeDirect
+	MouseMouseDeviceInfo.CollectionMode = ebPressesOnly
+	MouseMouseDeviceInfo.ShowCursor = False
+	Mouse.Open MouseMouseDeviceInfo
+
+
+	SetOSThreadPriority 0
+
+End Sub
+
+
+
+'--------------------------------------------------------------------------
+' InitObjects
+'
+'--------------------------------------------------------------------------
+Sub InitObjects(c As Context)
+
+	Set SessionProc = New Procedure
+	SessionProc.Name = "SessionProc"
+	SessionProc.Tag = ""
+	SessionProc.Subroutine = "SessionProc_Run"
+
+	Set BlockList = New List
+	BlockList.Name = "BlockList"
+	BlockList.Tag = ""
+
+	'Initialization for BlockList
+	
+	Set BlockList.Order = New SequentialOrder
+	Set BlockList.Deletion = NoDeletion
+	BlockList.ResetEveryRun = False
+
+	' Create the column headings
+	BlockList.Filename = ""
+	BlockList.LoadMethod = ebLoadMethodEmbedded
+
+	BlockList.Load
+
+	Set BlockList.TerminateCondition = Cycles(1)
+	Set BlockList.ResetCondition = Samples(1)
+	BlockList.Reset
+	
+	Set BlockProc = New Procedure
+	BlockProc.Name = "BlockProc"
+	BlockProc.Tag = ""
+	BlockProc.Subroutine = "BlockProc_Run"
+
+	Set Tokens = New ImageDisplay
+	Tokens.Name = "Tokens"
+	Tokens.Tag = ""
+
+	Set TokensEchoClients = New EchoClientCollection
+	Tokens.Filename = "0.bmp"
+	Tokens.Load
+
+	InitImageDisplayDefaults Tokens
+
+	Tokens.BackColor = CColor("white")
+	Tokens.Duration = CLng("-1")
+	Tokens.TimingMode = ebTimingModeEvent
+	Tokens.PreRelease = Val("0")
+
+	Tokens.OnsetSync = 1
+	Tokens.OffsetSync = 0
+
+	Set TrialList = New List
+	TrialList.Name = "TrialList"
+	TrialList.Tag = ""
+
+	'Initialization for TrialList
+	
+	Set TrialList.Order = New SequentialOrder
+	Set TrialList.Deletion = NoDeletion
+	TrialList.ResetEveryRun = False
+
+	' Create the column headings
+	TrialList.AddAttrib "Circle"
+	TrialList.AddAttrib "Crystal"
+	TrialList.AddAttrib "Square"
+	TrialList.AddAttrib "Diamond"
+	TrialList.Filename = ""
+	TrialList.LoadMethod = ebLoadMethodEmbedded
+
+	TrialList.Load
+
+	Set TrialList.TerminateCondition = Cycles(1)
+	Set TrialList.ResetCondition = Samples(30)
+	TrialList.Reset
+	
+	Set TrialProc = New Procedure
+	TrialProc.Name = "TrialProc"
+	TrialProc.Tag = ""
+	TrialProc.Subroutine = "TrialProc_Run"
+
+	Set Instructions = New TextDisplay
+	Instructions.Name = "Instructions"
+	Instructions.Tag = ""
+
+	Set InstructionsEchoClients = New EchoClientCollection
+
+	InitTextDisplayDefaults Instructions
+
+	Instructions.Text = "You will see four tokens displayed on the screen. Each token has both rewards and penalties associated with it. Choose a token by pressing its key, an" &_ 
+				"d you will be either rewarded or penalized. This is shown as two values on the screen (for example):\n\n100\n1250\n\nThe top number is the points rece" &_ 
+				"ived on the token just chosen. The bottom is the running total of how many points you have. You start with 0 points. You can choose any token, and can" &_ 
+				" switch tokens at any time. The goal is to earn as many points as possible. This is not random; you can earn more by choosing the right token(s).\nPre" &_ 
+				"ss the SPACE bar to begin."
+	Instructions.FontSize = "12"
+	Instructions.Duration = CLng("-1")
+	Instructions.TimingMode = ebTimingModeEvent
+	Instructions.PreRelease = Val("0")
+
+	Instructions.OnsetSync = 1
+	Instructions.OffsetSync = 0
+
+	Set Feedback = New FeedbackDisplay
+	Feedback.Name = "Feedback"
+	Feedback.Tag = ""
+
+	Feedback.ACCDivisor = "1.0"
+	Feedback.ACCFormat = "Percent"
+	Feedback.RTDivisor = "1000.0"
+	Feedback.RTFormat = "###0.000"
+	Feedback.CorrectRTDivisor = "1000.0"
+	Feedback.CorrectRTFormat = "###0.000"
+	Feedback.IncorrectRTDivisor = "1000.0"
+	Feedback.IncorrectRTFormat = "###0.000"
+	Feedback.CollectNoRespACCStats = True
+	Feedback.Duration = CLng("1500")
+	Feedback.TimingMode = ebTimingModeEvent
+	Feedback.PreRelease = Val("0")
+
+	Feedback.OnsetSync = 1
+	Feedback.OffsetSync = 0
+
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "Correct"
+
+	InitSlideStateDefaults Feedback_State
+
+	Feedback_State.BackColor = CColor("black")
+
+	Feedback.States.Add Feedback_State, "Correct"
+
+
+	Set Feedback_SlideText = New SlideText
+	Feedback_SlideText.Name = "Text3"
+
+	InitSlideTextDefaults Feedback_SlideText
+
+	Feedback_SlideText.X = "50%"
+	Feedback_SlideText.Y = "61%"
+	Feedback_SlideText.Width = "49%"
+	Feedback_SlideText.Height = "10%"
+	Feedback_SlideText.ForeColor = CColor("white")
+	Feedback_SlideText.BackColor = CColor("black")
+	Feedback_SlideText.BackStyle = "transparent"
+	Feedback_SlideText.FontSize = "24"
+	Feedback.States.Item("Correct").Objects.Add Feedback_SlideText, "Text3"
+
+	Set Feedback_SlideText = New SlideText
+	Feedback_SlideText.Name = "Text1"
+
+	InitSlideTextDefaults Feedback_SlideText
+
+	Feedback_SlideText.X = "50%"
+	Feedback_SlideText.Y = "44%"
+	Feedback_SlideText.Width = "21%"
+	Feedback_SlideText.Height = "13%"
+	Feedback_SlideText.ForeColor = CColor("white")
+	Feedback_SlideText.BackColor = CColor("black")
+	Feedback_SlideText.BackStyle = "transparent"
+	Feedback_SlideText.FontSize = "24"
+	Feedback.States.Item("Correct").Objects.Add Feedback_SlideText, "Text1"
+
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "Incorrect"
+
+	InitSlideStateDefaults Feedback_State
+
+	Feedback_State.Enabled = CLogical("No")
+
+	Feedback.States.Add Feedback_State, "Incorrect"
+
+
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "NoResponse"
+
+	InitSlideStateDefaults Feedback_State
+
+	Feedback_State.Enabled = CLogical("No")
+
+	Feedback.States.Add Feedback_State, "NoResponse"
+
+
+	Set Feedback_State = New SlideState
+	Feedback_State.Name = "Pending"
+
+	InitSlideStateDefaults Feedback_State
+
+	Feedback_State.Enabled = CLogical("No")
+
+	Feedback.States.Add Feedback_State, "Pending"
+
+
+
+End Sub
+
+
+'--------------------------------------------------------------------------
+' InitPackages
+'
+'--------------------------------------------------------------------------
+Sub InitPackages(c As Context)
+
+End Sub
+
+
+
+'--------------------------------------------------------------------------
+'--------------------------------------------------------------------------
+' UnInitDevices
+'--------------------------------------------------------------------------
+Sub UnInitDevices()
+	Display.Close
+	Set Display = Nothing
+
+	Keyboard.Close
+	Set Keyboard = Nothing
+
+	Mouse.Close
+	Set Mouse = Nothing
+
+End Sub
+
+
+'--------------------------------------------------------------------------
+'--------------------------------------------------------------------------
+' UnInitPackages
+'--------------------------------------------------------------------------
+Sub UnInitPackages()
+End Sub
+
+
+'--------------------------------------------------------------------------
+' UnInitObjects
+'
+'--------------------------------------------------------------------------
+Sub UnInitObjects()
+
+	Set SessionProc = Nothing
+
+	Set BlockList = Nothing
+
+	Set BlockProc = Nothing
+
+	Set Tokens = Nothing
+
+	Set TokensEchoClients = Nothing
+
+	Set TrialList = Nothing
+
+	Set TrialProc = Nothing
+
+	Set Instructions = Nothing
+
+	Set InstructionsEchoClients = Nothing
+
+	Set Feedback = Nothing
+
+
+End Sub
+
+
+'--------------------------------------------------------------------------
+' Main
+'
+'--------------------------------------------------------------------------
+Sub Main()
+
+	CreateDefaultPort
+
+	' Create and initialize the default context, data file,
+	' and provide global access to the context.
+	Dim c As Context
+	Set c = New Context
+	Set c.DataFile = New DataFile
+	c.PushNewFrame
+	Set ebContext = c
+
+	' Set the log level names
+	c.SetLogLevelName 1, "Session"
+	c.SetLogLevelName 2, "Block"
+	c.SetLogLevelName 3, "Trial"
+	c.SetLogLevelName 4, "SubTrial"
+	c.SetLogLevelName 5, "LogLevel5"
+	c.SetLogLevelName 6, "LogLevel6"
+	c.SetLogLevelName 7, "LogLevel7"
+	c.SetLogLevelName 8, "LogLevel8"
+	c.SetLogLevelName 9, "LogLevel9"
+	c.SetLogLevelName 10, "LogLevel10"
+
+	' Set standard logging items
+	ebContext.SetAttrib "Experiment", "four_tokens_new"
+	ebContext.SetAttrib "SessionDate", Date$
+	ebContext.SetAttrib "SessionTime", Time$
+	ebContext.SetAttrib "RandomSeed", PRNG.GetSeed()
+
+	If Basic.OS = ebWin32 Then
+		WinActivate "E-Run Experiment Window"
+	End If
+
+	' Get the StartupInfo
+	' Set default for GroupNumber
+	c.SetAttrib "Group", "1"
+
+
+	' Set the defaults for all of the StartupInfo
+	c.SetAttrib "Subject", "1"
+	c.SetAttrib "Session", "1"
+
+	' Set the default Data Filename
+	c.DataFile.Filename = CStr(c.GetAttrib("Experiment")) & "-" & CStr(c.GetAttrib("Subject")) & "-" & CStr(c.GetAttrib("Session")) & ".txt"
+
+	' If we are logging data, then prompt to overwrite the data file if it exists
+	If CLng(c.GetAttrib("Subject")) <> 0 Then
+		If FileExists(c.DataFile.Filename) Then
+			If ebYes <> MsgBox("WARNING: The data file and/or recovery file already exists:\nFILE: " & c.DataFile.Filename & "\n\nDo you want to overwrite?", ebYesNo + ebQuestion) Then
+				GoTo ExperimentAbort
+			End If
+		End If
+	End If
+
+	' Initialize all system devices, packages, and objects
+	InitDevices c
+	InitPackages c
+	InitObjects c
+
+	' If we are logging data, then open the datafile
+	If CLng(c.GetAttrib("Subject")) <> 0 Then
+		c.DataFile.Open
+		c.LogHeader
+	End If
+
+	' Start the running of the Experiment
+	SessionProc.Run c
+
+	' Clean up the context and close the datafile
+	If CLng(c.GetAttrib("Subject")) <> 0 Then
+		c.DataFile.Close
+		' Attempt to convert the recovery file into a data file
+		Dim nConvert As Long
+		nConvert = c.DataFile.Convert(ebProgressSimple)
+		If nConvert = 0 Then
+			' Settings in E-Studio are set to not remove E-Recovery file
+		Else
+			' The datafile failed to convert!
+			MsgBox "ERROR: The datafile did not convert!\nFILE: " & c.DataFile.Filename & "\n\nIt is recommended that you recover your data with the E-Recovery utility"
+			MsgBox c.DataFile.GetLastErrorMessage()
+		End If
+	End If
+ExperimentFinish:
+
+	UnInitObjects
+
+	UnInitPackages
+	UnInitDevices
+
+ExperimentAbort:
+
+	' Clean up the context
+	c.PopFrame
+	Set c = Nothing
+	Set ebContext = Nothing
+
+	DestroyDefaultPort
+
+End Sub
+
+
+[DataSection_BlockList(1)]
+Weight	Nested	Procedure
+1		BlockProc\0
+
+[DataSection_TrialList(1)]
+Weight	Nested	Procedure	Circle	Crystal	Square	Diamond
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-125	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	-2150	-125	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-125	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-145	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	-2150	-125	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	-465
+1		TrialProc	150	200	-145	-310
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	-125	-310
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-1000	-2150	-125	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	-145	-465
+1		TrialProc	150	200	150	200
+1		TrialProc	150	200	150	200
+1		TrialProc	150	-310	-125	-310
+1		TrialProc	150	-310	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	-145	200
+1		TrialProc	150	200	150	-310
+1		TrialProc	-950	200	-125	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	-2150	150	200
+1		TrialProc	150	200	150	-465
+1		TrialProc	150	200	150	200\0

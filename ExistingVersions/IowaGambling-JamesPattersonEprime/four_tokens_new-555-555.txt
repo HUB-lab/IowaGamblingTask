@@ -1,0 +1,140 @@
+*** Header Start ***
+VersionPersist: 1
+LevelName: Session
+LevelName: Block
+LevelName: Trial
+LevelName: SubTrial
+LevelName: LogLevel5
+LevelName: LogLevel6
+LevelName: LogLevel7
+LevelName: LogLevel8
+LevelName: LogLevel9
+LevelName: LogLevel10
+Experiment: four_tokens_new
+SessionDate: 10-11-2002
+SessionTime: 17:13:21
+RandomSeed: -1553847712
+Group: 1
+Subject: 555
+Session: 555
+Display.RefreshRate: 75.001
+*** Header End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 1
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 1
+		Tokens.OnsetDelay: 10
+		Tokens.OnsetTime: 7985
+		Tokens.DurationError: -999999
+		Tokens.RTTime: 8741
+		Tokens.ACC: 0
+		Tokens.RT: 756
+		Tokens.RESP: i
+		Tokens.CRESP: ricm
+		totalsum: 200
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 2
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 2
+		Tokens.OnsetDelay: 7
+		Tokens.OnsetTime: 10252
+		Tokens.DurationError: -999999
+		Tokens.RTTime: 10877
+		Tokens.ACC: 0
+		Tokens.RT: 625
+		Tokens.RESP: i
+		Tokens.CRESP: ricm
+		totalsum: 200
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 3
+		Circle: 150
+		Crystal: -310
+		Square: -125
+		Diamond: -465
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 3
+		Tokens.OnsetDelay: 7
+		Tokens.OnsetTime: 12385
+		Tokens.DurationError: -999999
+		Tokens.RTTime: 12849
+		Tokens.ACC: 0
+		Tokens.RT: 464
+		Tokens.RESP: i
+		Tokens.CRESP: ricm
+		totalsum: -310
+		var: -310
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 4
+		Circle: 150
+		Crystal: 200
+		Square: 150
+		Diamond: 200
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 4
+		Tokens.OnsetDelay: 6
+		Tokens.OnsetTime: 14358
+		Tokens.DurationError: -999999
+		Tokens.RTTime: 14738
+		Tokens.ACC: 0
+		Tokens.RT: 380
+		Tokens.RESP: i
+		Tokens.CRESP: ricm
+		totalsum: 200
+		var: 200
+		*** LogFrame End ***
+		Level: 3
+		*** LogFrame Start ***
+		Procedure: TrialProc
+		TrialList: 5
+		Circle: 150
+		Crystal: 200
+		Square: -145
+		Diamond: -310
+		Running: TrialList
+		TrialList.Cycle: 1
+		TrialList.Sample: 5
+		*** LogFrame End ***
+	Level: 2
+	*** LogFrame Start ***
+	BlockList: 1
+	Procedure: BlockProc
+	BlockList.Cycle: 1
+	BlockList.Sample: 1
+	Running: BlockList
+	*** LogFrame End ***
+Level: 1
+*** LogFrame Start ***
+Experiment: four_tokens_new
+SessionDate: 10-11-2002
+SessionTime: 17:13:21
+RandomSeed: -1553847712
+Group: 1
+Subject: 555
+Session: 555
+Display.RefreshRate: 75.001
+*** LogFrame End ***
