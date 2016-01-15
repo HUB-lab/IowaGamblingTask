@@ -64,6 +64,9 @@ IGTChoices$PropB <- IGTChoices$B / IGTChoices$Trials
 IGTChoices$PropC <- IGTChoices$C / IGTChoices$Trials
 IGTChoices$PropD <- IGTChoices$D / IGTChoices$Trials
 
+pairs(~mpg+disp+drat+wt,data=mtcars, 
+      main="Simple Scatterplot Matrix")
+
 MeanProportionsbyScheme <- aggregate(IGTChoices[,c('PropA','PropB','PropC','PropD')], list(IGTChoices$Scheme), function(x) c(M = mean(x), SE = sd(x)/sqrt(length(x))))
 colnames(MeanProportionsbyScheme)[1] <- "Scheme"
 
