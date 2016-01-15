@@ -5,15 +5,15 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
     % make logfile to be filled in in real time
     logfile = fopen([logfilename '.csv'], 'a');
     fprintf(logfile,'trialnum,choice,rt,reward,penalty,netgain,previous_earnings,running_netscore','\n');
-
-    task.starttime = GetSecs(); 
     
-    %setup Task variables for designing blocks and trials, inputs etc
+    %Define Task characteristics - everything should work fine if you
+    %change these, so this is a "configurable" Iowa Gambling Task...
     KbName('UnifyKeyNames');
     task.totaltrials = 100; %100 is standard; some papers go up to 150
     task.ITI = 0.5; %intertrial interval in secs
-    task.outcomedisplaydur = 2; %how long in secs to display the outcome of their choice. This is crucial and should be long to allow us
+    task.outcomedisplaydur = 2; %how long in secs to display the outcome of their choice. This is crucial and should be long to allow subjects to register the impact of their choice on earnings. No less than 3s ITI is good if you want to measure pupil diameter.
     task.numchoices(1:4) = 0; %construct counter of the number of choices they've made from each deck 1-4
+    task.infinitedeckdepth = 1; 
     
     %setup deck vectors from input file
     tempData = importdata('PayoffScheme.csv');
@@ -29,8 +29,12 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
     trials.trialstarttime = zeros(1,task.totaltrials); 
     trials(1).earnings = 2000; %start with $2000 borrowed
     
+    
     %% Finally ready to begin task
-        
+
+    %record the task starttime
+    task.starttime = GetSecs(); 
+
     %prepare for trial loop and commence
     for currtrial = 1:task.totaltrials
         %trial setup - record time, reset mouse position for subsequent
@@ -83,7 +87,9 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
             end
         end
 
-        %They've now selected a deck, so we can present the outcomes
+        %They've now selected a deck, so we can present the outcomes and
+        %increment our counters
+        trials(currtrial).deckdepth(trials(currtrial).selected_deck) = trials(currtrial).deckdepth(trials(currtrial).selected_deck) + 1;
         trials(currtrial).netscore = (task.numchoices(3) + task.numchoices(4)) - (task.numchoices(2) + task.numchoices(2)); %keep a running tally of the netscore
         trials(currtrial).choice = images.label{trials(currtrial).selected_deck};
         trials(currtrial).reward = decks.Gains(task.numchoices(trials(currtrial).selected_deck),trials(currtrial).selected_deck);
@@ -92,11 +98,10 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
         images.earnings = trials(currtrial).earnings + trials(currtrial).netgain; %note that images.earnings is what is shown to subjects after a choice; trial.earnings is how many earnings they are GOING INTO the next trial with
         DrawDecks(w,images,trials(currtrial).selected_deck); DrawColorBar(w,images,trials(currtrial).choice,trials(currtrial).reward,trials(currtrial).penalty,trials(currtrial).netgain);
         Screen('Flip',w);
-                
 
         %Write to the log while we're waiting for the subjects to get their yummy dopamine
         %trialnum,choice,rt,reward,penalty,netgain,previous_earnings,running_netscore
-        trials(currtrial).outline = strcat(currtrial,',',num2str(trials(currtrial).selected_deck),',',num2str(trials(currtrial).RT),',',num2str(trials(currtrial).reward),',',num2str(trials(currtrial).penalty),',',num2str(trials(currtrial).netgain),',',num2str(trials(currtrial).earnings),',',num2str(trials(currtrial).netscore));
+        trials(currtrial).outline = strcat(num2str(currtrial),',',num2str(trials(currtrial).selected_deck),',',num2str(trials(currtrial).RT),',',num2str(trials(currtrial).reward),',',num2str(trials(currtrial).penalty),',',num2str(trials(currtrial).netgain),',',num2str(trials(currtrial).earnings),',',num2str(trials(currtrial).netscore));
         fprintf(logfile,([trials(currtrial).outline,'\n']));
         while (GetSecs()-(trials(currtrial).RT+trials(currtrial).starttime)) < task.outcomedisplaydur
             WaitSecs(0.005); %5ms time resolution on outcome display duration

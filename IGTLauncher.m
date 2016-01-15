@@ -19,10 +19,13 @@ try
     [images] = IGTSetupImages(w); %read in the decks etc
     [images] = IGTInstructions(w,images); %commented out for testing
     [task, images, trials] = IGTTask(w,subjectIDinput,sessionIDinput,['IGT_' num2str(subjectIDinput) '_' num2str(sessionIDinput) '_' (studyIDinput) '_' num2str(centerIDinput) '_' mmddyy '_' HHMM],images);
+    DrawFormattedText(w,'Thank you, this task is complete. Please get the experimenter.','center',0.5*images.yres,225,images.wrap);
+    Screen('Flip',w); %display this while saving the IGT workspace, which may be very large
     eval(['save ' ['IGT_' num2str(subjectIDinput) '_' num2str(sessionIDinput) '_' (studyIDinput) '_' num2str(centerIDinput) '_' mmddyy '_' HHMM]]);
-    %sca
-    %IGTAnalysis(['IGT_' num2str(subjectIDinput) '_' num2str(sessionIDinput) '_' (studyIDinput) '_' num2str(centerIDinput) '_' mmddyy '_' HHMM '.csv']);
-    %exit;
+    fclose('all');
+    sca
+    IGTAnalysis(['IGT_' num2str(subjectIDinput) '_' num2str(sessionIDinput) '_' (studyIDinput) '_' num2str(centerIDinput) '_' mmddyy '_' HHMM '.csv']);
+    exit;
 catch err
     sca
     rethrow(err)

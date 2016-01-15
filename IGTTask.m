@@ -4,16 +4,17 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
 
     % make logfile to be filled in in real time
     logfile = fopen([logfilename '.csv'], 'a');
-    fprintf(logfile,'trialnum,choice,rt,reward,penalty,netgain,previous_earnings,running_netscore','\n');
-
-    task.starttime = GetSecs(); 
+    fprintf(logfile,'trialnum,choice,rt,reward,penalty,netgain,previous_earnings,running_netscore\n');
     
-    %setup Task variables for designing blocks and trials, inputs etc
+    %Define Task characteristics - everything should work fine if you
+    %change these, so this is a "configurable" Iowa Gambling Task...
     KbName('UnifyKeyNames');
     task.totaltrials = 100; %100 is standard; some papers go up to 150
     task.ITI = 0.5; %intertrial interval in secs
     task.outcomedisplaydur = 2; %how long in secs to display the outcome of their choice. This is crucial and should be long to allow subjects to register the impact of their choice on earnings. No less than 3s ITI is good if you want to measure pupil diameter.
     task.numchoices(1:4) = 0; %construct counter of the number of choices they've made from each deck 1-4
+    task.deckdepth = task.numchoices; %deck depth is numchoices modulo the number of cards in the deck, which is determined later
+    task.infinitedeckdepth = 1; %you can change this but it will have no effect - not yet implemented. This is here ONLY to record that the current implementation loops infinitely through the decks
     
     %setup deck vectors from input file
     tempData = importdata('PayoffScheme.csv');
@@ -29,8 +30,12 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
     trials.trialstarttime = zeros(1,task.totaltrials); 
     trials(1).earnings = 2000; %start with $2000 borrowed
     
+    
     %% Finally ready to begin task
-        
+
+    %record the task starttime
+    task.starttime = GetSecs(); 
+
     %prepare for trial loop and commence
     for currtrial = 1:task.totaltrials
         %trial setup - record time, reset mouse position for subsequent
@@ -61,6 +66,7 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
 
         %start the trial timestamp and show the stimulus display we drew
         trials(currtrial).starttime = GetSecs(); 
+        ShowCursor;
         Screen('Flip',w);
         timecounter = 0;
         
@@ -83,16 +89,18 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
             end
         end
 
-        %They've now selected a deck, so we can present the outcomes
-        trials(currtrial).netscore = (task.numchoices(3) + task.numchoices(4)) - (task.numchoices(2) + task.numchoices(2)); %keep a running tally of the netscore
+        %They've now selected a deck, so we can present the outcomes and
+        %increment our counters
+        HideCursor;
+        task.deckdepth(trials(currtrial).selected_deck) = mod(task.numchoices(trials(currtrial).selected_deck),length(decks.Gains))+1; %increment deck depth for selected deck and loop across deck size
+        trials(currtrial).netscore = ((task.numchoices(4) + task.numchoices(3)) - (task.numchoices(2) + task.numchoices(1))); %keep a running tally of the netscore
         trials(currtrial).choice = images.label{trials(currtrial).selected_deck};
-        trials(currtrial).reward = decks.Gains(task.numchoices(trials(currtrial).selected_deck),trials(currtrial).selected_deck);
-        trials(currtrial).penalty = decks.Losses(task.numchoices(trials(currtrial).selected_deck),trials(currtrial).selected_deck);
+        trials(currtrial).reward = decks.Gains(task.deckdepth(trials(currtrial).selected_deck),trials(currtrial).selected_deck);
+        trials(currtrial).penalty = decks.Losses(task.deckdepth(trials(currtrial).selected_deck),trials(currtrial).selected_deck);
         trials(currtrial).netgain = trials(currtrial).reward + trials(currtrial).penalty;
         images.earnings = trials(currtrial).earnings + trials(currtrial).netgain; %note that images.earnings is what is shown to subjects after a choice; trial.earnings is how many earnings they are GOING INTO the next trial with
         DrawDecks(w,images,trials(currtrial).selected_deck); DrawColorBar(w,images,trials(currtrial).choice,trials(currtrial).reward,trials(currtrial).penalty,trials(currtrial).netgain);
         Screen('Flip',w);
-                
 
         %Write to the log while we're waiting for the subjects to get their yummy dopamine
         %trialnum,choice,rt,reward,penalty,netgain,previous_earnings,running_netscore
@@ -104,13 +112,11 @@ function [task, images, trials]=IGTTask(w,subjectIDinput,sessionIDinput,logfilen
 
     end
     task.completetime = GetSecs();
-    sca;
-    fclose(logfile);
 end   
     
  function DrawColorBar(w, images, Choice, Reward, Penalty, NetGain)
     Screen('DrawTexture',w,images.colorbartexture,[],images.position.colorbar);  %draw colorbar
-    Screen('FillRect', w,0,[images.position.colorbar(1)+(((images.earnings+1000)/6000)*(images.position.colorbar(3)-images.position.colorbar(1))), 0.8*images.yres, images.position.colorbar(3), 0.9*images.yres]); %black mask over color bar
+    Screen('FillRect', w,0,[images.position.colorbar(1)+(((max(-2000,min(5000,images.earnings)+1000)/6000))*(images.position.colorbar(3)-images.position.colorbar(1))), 0.8*images.yres, images.position.colorbar(3), 0.9*images.yres]); %black mask over color bar, min and maxing the range to ensure other things aren't overwritten
     DrawFormattedText(w,'-1000',(images.xres/3),0.9*images.yres,225,images.wrap);
     DrawFormattedText(w,'0',1.2*(images.xres/3),0.9*images.yres,225,images.wrap);
     DrawFormattedText(w,'1000',1.4*(images.xres/3),0.9*images.yres,225,images.wrap);

@@ -22,12 +22,12 @@ function IGTAnalysis(filename)
     running_netscore = C{8};
 
     %calculate endpoints
-    NetScoreOverall = sum(C{2}>2)-sum(C{2}<3);
-    NetScore1to20 = sum(C{2}(1:20)>2)-sum(C{2}(1:20)<3);
-    NetScore21to40 = sum(C{2}(21:40)>2)-sum(C{2}(21:40)<3);
-    NetScore41to60 = sum(C{2}(41:60)>2)-sum(C{2}(41:60)<3);
-    NetScore61to80 = sum(C{2}(61:80)>2)-sum(C{2}(61:80)<3);
-    NetScore81toend = sum(C{2}(81:end)>2)-sum(C{2}(81:end)<3);
+    NetScoreOverall = sum(C{2}>2)-sum(C{2}<3)
+    PfizerSummary(2) = NetScore1-20;
+    PfizerSummary(3) = NetScore21-40;
+    PfizerSummary(4) = NetScore41-60;
+    PfizerSummary(5) = NetScore61-80;
+    PfizerSummary(6) = NetScore81-100;
     
     
     
@@ -61,18 +61,19 @@ function IGTAnalysis(filename)
     %%
     %Make Pfizer summary file
     PfizerSummary(1) = NetScoreOverall;
-    PfizerSummary(2) = NetScore1to20;
-    PfizerSummary(3) = NetScore21to40;
-    PfizerSummary(4) = NetScore41to60;
-    PfizerSummary(5) = NetScore61to80;
-    PfizerSummary(6) = NetScore81toend;
+    PfizerSummary(2) = NetScore1-20;
+    PfizerSummary(3) = NetScore21-40;
+    PfizerSummary(4) = NetScore41-60;
+    PfizerSummary(5) = NetScore61-80;
+    PfizerSummary(6) = NetScore81-100;
     Pfizerfilename = ['PfzSum_',filename];
     fid = fopen(Pfizerfilename, 'w');
-    fprintf(fid, '%s\n',['NetScoreOverall,NetScore1to20,Netscore21to40,Netscore41to60,Netscore61to80,Netscore81toend']);
+    fprintf(fid, '%s\n',['NetScoreOverall,NetScore1-20,Netscore21-40,Netscore41-60,Netscore61-80,Netscore81-100']);
     fclose(fid);
     dlmwrite(Pfizerfilename, PfizerSummary, '-append','delimiter', ',', 'precision','%.6f','newline','pc');    
 
     
     %% Zip and protect
-    filestem = strrep(strrep(filename,'.csv',''),'IGT','');
-    dos(['7z a IGT_' filestem '.zip ' '*' filestem '*']);
+    filestem = strrep(strrep(filename,'.csv',''),'DS_','');
+    dos(['7z a DS_' filestem '.zip ' '*' filestem '*']);
+	dos(['icacls DS_' filestem '.zip /deny *S-1-1-0:(DE)']); 
